@@ -127,6 +127,7 @@
         <select id="s1" onchange="updateS2(this)">
             <option value="ISP">Pilih ISP</option>
             <option value="BVS">BVS</option>
+            <option value="BVS_BUNGO">BVS_BUNGO</option>
             <option value="3D">3D</option>
         </select>
 
@@ -196,6 +197,15 @@
         addOption(S2, 'Sarolangun', 'Sarolangun');
         addOption(S2, 'Jambi', 'Jambi');
         addOption(S2, 'Bulian', 'Bulian');
+    } else if (selectedCategory === 'BVS_BUNGO') {
+        addOption(S2, 'Bungo_RUKO', 'Bungo_RUKO');
+        addOption(S2, 'Bungo_CANDIKA', 'Bungo_CANDIKA');
+        addOption(S2, 'Bungo_RIMBO', 'Bungo_RIMBO');
+        addOption(S2, 'Bungo_KUAMANG', 'Bungo_KUAMANG');
+        addOption(S2, 'Bungo_LAMO', 'Bungo_LAMO');
+        addOption(S2, 'Bungo_SOMEL', 'Bungo_SOMEL');
+        addOption(S2, 'Bungo_TEBO', 'Bungo_TEBO');
+        addOption(S2, 'Bungo_LAMO_VLAN56', 'Bungo_LAMO_VLAN56');
     } else if (selectedCategory === '3D') {
         addOption(S2, 'Persijam', 'Persijam');
         addOption(S2, 'Telanai', 'Telanai');
@@ -204,22 +214,22 @@
         addOption(S2, 'Pilih Region', 'Pilih Region');
     }
 
-    var s2Select = document.getElementById('S2');
-        var npLabel = document.querySelector('label[for="nam"]');
-        var npInput = document.getElementById('nam');
+    //SIMPEN ( var s2Select = document.getElementById('S2');
+        //SIMPEN ( var npLabel = document.querySelector('label[for="nam"]');
+        //SIMPEN ( var npInput = document.getElementById('nam');
 
         // Your existing logic to update S2 options goes here
 
         // Check if BVS is selected
-        if (selectedOption.value === 'BVS') {
+        //SIMPEN ( if (selectedOption.value === 'BVS') {
             // Hide Nama label and input
-            npLabel.style.display = 'none';
-            npInput.style.display = 'none';
-        } else {
+            //SIMPEN ( npLabel.style.display = 'none';
+            //SIMPEN ( npInput.style.display = 'none';
+        //SIMPEN ( } else {
             // Show Nama label and input for other ISPs
-            npLabel.style.display = 'block';  // or 'inline-block' based on your styling
-            npInput.style.display = 'block';  // or 'inline-block' based on your styling
-        }
+            //SIMPEN ( npLabel.style.display = 'block';  // or 'inline-block' based on your styling
+            //SIMPEN ( npInput.style.display = 'block';  // or 'inline-block' based on your styling
+        //SIMPEN ( }
 
 }
 
@@ -412,7 +422,302 @@ igmp mvlan 513 receive-port gpon-onu_${prt}:${sl} vport 2
 !
 exit
 write`;
-		
+		}
+			else if (selectedRegion === 'Bungo_RUKO') {
+				regionScript = `
+conf t
+interface gpon-olt_${prt}
+  onu ${sn} type ZTEG-F660 sn ${sn}
+!
+
+interface gpon-onu_${prt}:${sl}
+  description 2 $$  ${nam}-${modemScript}$$
+  tcont 1 name HSI profile pppoe
+  tcont 2 name IPTV profile 1MB
+  gemport 1 name HSI tcont 1
+  gemport 2 name IPTV tcont 2
+  service-port 1 vport 1 user-vlan 1541 vlan 1541
+  service-port 1 description 1541
+  service-port 2 vport 2 user-vlan 505 vlan 505
+  service-port 2 description 505
+!
+
+pon-onu-mng gpon-onu_${prt}:${sl}
+  service HSI gemport 1 vlan 1541
+  service IPTV gemport 2 vlan 505
+  wan-ip 1 mode pppoe username ${modemScript} password 123456 vlan-profile HSI host 1
+  wan-ip 1 ping-response enable traceroute-response enable
+  pppoe 1 nat enable user ${pel} password 123456
+  vlan port eth_0/4 mode hybrid def-vlan 505
+  dhcp-ip ethuni eth_0/4 from-internet
+  mvlan 505
+  security-mgmt 212 state enable mode forward protocol web
+!
+
+igmp mvlan 505 receive-port gpon-onu_${prt}:${sl} vport 2
+
+
+exit
+wr`;
+        }
+            else if (selectedRegion === 'Bungo_CANDIKA') {
+				regionScript = `
+conf t
+interface gpon-olt_${prt}
+  onu ${sl} type ZTEG-F660 sn ${sn}
+!
+
+interface gpon-onu_${prt}:${sl}
+  description 2 $$  ${nam}-${modemScript}$$
+  tcont 1 name HSI profile pppoe
+  tcont 2 name IPTV profile 1MB
+  gemport 1 name HSI tcont 1
+  gemport 2 name IPTV tcont 2
+  service-port 1 vport 1 user-vlan 1541 vlan 1541
+  service-port 1 description 1541
+  service-port 2 vport 2 user-vlan 505 vlan 505
+  service-port 2 description 505
+!
+
+pon-onu-mng gpon-onu_${prt}:${sl}
+  service HSI gemport 1 vlan 1541
+  service IPTV gemport 2 vlan 505
+  wan-ip 1 mode pppoe username ${modemScript} password 123456 vlan-profile HSI host 1
+  wan-ip 1 ping-response enable traceroute-response enable
+  pppoe 1 nat enable user ${pel} password 123456
+  vlan port eth_0/4 mode hybrid def-vlan 505
+  dhcp-ip ethuni eth_0/4 from-internet
+  mvlan 505
+  security-mgmt 212 state enable mode forward protocol web
+!
+
+igmp mvlan 505 receive-port gpon-onu_${prt}:${sl} vport 2
+
+
+exit
+wr`;
+        }
+            else if (selectedRegion === 'Bungo_RIMBO') {
+				regionScript = `
+conf t
+interface gpon-olt_${prt}
+ onu ${sl} type ZTE-F660 sn ${sn}
+!
+
+interface gpon-onu_${prt}:${sl}
+  description  ${nam}-${modemScript}
+  tcont 1 name Internet profile 1MB
+  tcont 2 name IPTV profile 10MB
+  gemport 1 name internet tcont 1
+  gemport 2 name iptv tcont 2
+  service-port 1 vport 1 user-vlan 313 vlan 313
+  service-port 1 description internet
+  service-port 2 vport 2 user-vlan 669 vlan 669
+  service-port 2 description iptv
+!
+
+pon-onu-mng gpon-onu_${prt}:${sl}
+  service internet gemport 1 vlan 313
+  service iptv gemport 2 vlan 669
+  wan-ip 1 mode pppoe username ${modemScript} password 123456 vlan-profile 313.Studio3 host 1
+  wan-ip 1 ping-response enable traceroute-response enable
+  pppoe 1 nat enable user ${pel} password 123456
+  vlan port eth_0/1 mode tag vlan 313
+  vlan port eth_0/4 mode tag vlan 669
+  vlan port wifi_0/2 mode tag vlan 313
+  dhcp-ip ethuni eth_0/1 from-internet
+  dhcp-ip ethuni eth_0/4 from-internet
+  security-mgmt 212 state enable mode forward protocol web
+  wan 1 ethuni 2,3 ssid 1 service internet host 1
+!
+
+igmp mvlan 669 receive-port gpon-onu_${prt}:${sl} vport 2
+!
+
+
+
+exit
+write`;
+        }
+            else if (selectedRegion === 'Bungo_KUAMANG') {
+				regionScript = `
+conf t
+interface gpon-olt_${prt}
+  onu ${sl} type ZTE-F660 sn ${sn}
+!
+interface gpon-onu_${prt}:${sl}
+  description ${nam}-${modemScript}
+  tcont 1 name internet profile 10MB
+  tcont 2 name IPTV profile 20MB
+  gemport 1 name internet tcont 1
+  gemport 2 name IPTV tcont 2
+  service-port 1 vport 1 user-vlan 61 vlan 61
+  service-port 2 vport 2 user-vlan 666 vlan 666
+!
+pon-onu-mng gpon-onu_${prt}:${sl}
+  service internet gemport 1 vlan 61
+  service iptv gemport 2 vlan 666
+  wan-ip 1 mode pppoe username  ${modemScript} password 123456 vlan-profile Client host 1
+  wan-ip 1 ping-response enable traceroute-response enable
+  pppoe 1 nat enable user ${pel} password 123456
+  vlan port eth_0/4 mode tag vlan 666
+  dhcp-ip ethuni eth_0/4 from-internet
+  security-mgmt 212 state enable mode forward protocol web
+!
+igmp mvlan 666 receive-port gpon-onu_${prt}:${sl} vport 2
+!
+
+
+
+exit
+write`;
+        }
+            else if (selectedRegion === 'Bungo_LAMO') {
+				regionScript = `
+conf t
+interface gpon-olt_${prt}
+  onu ${sl} type ALL-ONT sn ${sn}
+!
+interface gpon-onu_${prt}:${sl}
+  description   ${nam}-${modemScript}
+  tcont 1 name internet profile internet
+  tcont 1 gap mode0
+  tcont 2 name iptv profile iptv
+  gemport 1 tcont 1
+  gemport 2 tcont 2
+  service-port 1 vport 1 user-vlan 310 vlan 310
+  service-port 2 vport 2 user-vlan 666 vlan 666
+!
+igmp  mvlan 666 receive-port gpon-onu_${prt}:${sl} vport 2
+!
+pon-onu-mng gpon-onu_${prt}:${sl}
+  service internet gemport 1 vlan 310
+  service iptv gemport 2 vlan 666
+  wan-ip 1 mode pppoe username ${modemScript} password 123456 vlan-profile User host 1
+  wan-ip 1 ping-response enable traceroute-response enable
+  pppoe 1 nat enable user ${pel} password 123456
+  vlan port eth_0/4 mode tag vlan 666
+  dhcp-ip ethuni eth_0/1 from-onu
+  dhcp-ip ethuni eth_0/4 from-internet
+  security-mgmt 1 state enable mode forward protocol web
+!
+
+
+
+exit
+wr`;
+        }
+            else if (selectedRegion === 'Bungo_SOMEL') {
+				regionScript = `
+conf t
+interface gpon-olt_${prt}
+  onu ${sl} type ALL-ONT sn ${sn}
+!
+
+interface gpon-onu_${prt}:${sl}
+  description  ${nam}-${modemScript}
+  tcont 1 name Internet profile internet
+  tcont 2 name IPTV profile iptv
+  gemport 1 name internet tcont 1
+  gemport 2 name iptv tcont 2
+  service-port 1 vport 1 user-vlan 313 vlan 313
+  service-port 2 vport 2 user-vlan 669 vlan 669
+!
+
+pon-onu-mng gpon-onu_${prt}:${sl}
+  service internet gemport 1 vlan 313
+  service iptv gemport 2 vlan 669
+  wan-ip 1 mode pppoe username ${modemScript} password 123456 vlan-profile pppoe host 1
+  wan-ip 1 ping-response enable traceroute-response enable
+  pppoe 1 nat enable user ${pel} password 123456
+  vlan port eth_0/1 mode tag vlan 313
+  vlan port eth_0/4 mode tag vlan 669
+  vlan port wifi_0/2 mode tag vlan 313
+  dhcp-ip ethuni eth_0/1 from-onu
+  dhcp-ip ethuni eth_0/4 from-internet
+  security-mgmt 212 state enable mode forward protocol web
+  wan 1 ethuni 2,3 ssid 1 service internet host 1
+!
+
+igmp mvlan 669 receive-port gpon-onu_${prt}:${sl} vport 2
+!
+
+
+
+exit
+write`;
+        }
+            else if (selectedRegion === 'Bungo_TEBO') {
+				regionScript = `
+conf t
+interface gpon-olt_${prt}
+  onu ${sl} type ZTE-F660 sn ${sn}
+!
+
+interface gpon-onu_${prt}:${sl}
+  description ${nam}-${modemScript}
+  tcont 1 name internet profile 10MB
+  tcont 2 name IPTV profile 10MB
+  gemport 1 name internet unicast tcont 1 dir both
+  gemport 2 name iptv unicast tcont 2 dir both
+  switchport mode hybrid vport 1
+  switchport mode hybrid vport 2
+  service-port 1 vport 1 user-vlan 312 vlan 312
+  service-port 2 vport 2 user-vlan 507 vlan 507
+  service-port 2 description iptv
+!
+
+pon-onu-mng gpon-onu_${prt}:${sl}
+  service iptv gemport 2 vlan 507
+  service internet gemport 1 vlan 312
+  wan-ip 1 mode pppoe username ${modemScript} password 123456 vlan-profile Net.Dist3 host 1
+  wan-ip 1 ping-response enable traceroute-response enable
+  pppoe 1 nat enable user ${pel} password 123456
+  vlan port eth_0/1 mode tag vlan 312
+  vlan port eth_0/4 mode tag vlan 507
+  dhcp-ip ethuni eth_0/4 from-internet
+  security-mng 212 state enable mode permit protocol web
+!
+
+igmp mvlan 507 receive-port gpon-onu_${prt}:${sl} vport 2
+!
+
+
+
+
+exit
+wr`;
+        }
+            else if (selectedRegion === 'Bungo_LAMO_VLAN56') {
+				regionScript = `
+con t
+interface gpon-olt_${prt}
+onu ${sl} type ALL-ONT sn ${sn}
+!
+interface gpon-onu_${prt}:${sl}
+  description ${nam}-${modemScript}
+  tcont 1 name internet profile internet
+  tcont 1 gap mode0
+  tcont 2 name iptv profile iptv
+  gemport 1 name Internet tcont 1
+  gemport 2 tcont 2
+  service-port 1 vport 1 user-vlan 56 vlan 56
+  service-port 2 vport 2 user-vlan 666 vlan 666
+!
+pon-onu-mng gpon-onu_${prt}:${sl}
+  service Internet gemport 1 vlan 56
+  service IPTV gemport 2 vlan 666
+  wan-ip 1 mode pppoe username ${modemScript} password 123456 vlan-profile Client host 1
+  wan-ip 1 ping-response enable traceroute-response enable
+  pppoe 1 nat enable user ${pel} password 123456
+  vlan port eth_0/4 mode tag vlan 666
+  dhcp-ip ethuni eth_0/1 from-onu
+  dhcp-ip ethuni eth_0/4 from-internet
+  security-mgmt 1 state enable mode forward protocol web
+!
+igmp  mvlan 666 receive-port gpon-onu_${prt}:${sl} vport 2
+exit
+wr`;
 		}
 			else if (selectedRegion === 'Paal 10') {
 				regionScript = `
