@@ -264,11 +264,12 @@
         var sl = document.getElementById('sl').value;
 
         var modemScript = '';
+        modemScript = pel;
         if (mdm === 'RTE&ZTE') {
             modemScript = pel;
         } else if (mdm === 'ZTE') {
             modemScript = pel;
-        } else if (mdm === '') {
+        } else if (mdm === 'mdm') {
             modemScript = pel;
         }
 
