@@ -265,9 +265,10 @@
 
         var modemScript = '';
         if (mdm === 'RTE&ZTE') {
-            //--modemScript = 'F670L-RTE';
             modemScript = pel;
         } else if (mdm === 'ZTE') {
+            modemScript = pel;
+        } else if (mdm === '') {
             modemScript = pel;
         }
 
