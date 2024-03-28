@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
     <title>CONFIG BVS</title>
-        <!-- batas nama web-->
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -22,7 +21,7 @@
 
             /* Light Theme */
             .light-theme {
-                background-color: #4d0049;
+                background-color: #000000;
                 color: #ffffff;
             }
     
@@ -30,7 +29,7 @@
             .container {
                 max-width: 800px;
                 margin: 0 auto;
-                padding: 20px;
+                padding: 10px;
                 text-align: center;
             }
     
@@ -48,23 +47,17 @@
             }
         </style>
     </head>
+
+
     <body class="dark-theme">
         <div class="container">
-            <h1>SET CONFIG OLT</h1>
-            <button class="toggle-btn" onclick="toggleTheme()">Change Theme</button>
+            <h1>BUANA VISUALNET SENTRAL</h1>
+            <h2>SIMPLE SET CONFIG OLT</h2>
         </div>
     
-        <script>
-            function toggleTheme() {
-                const body = document.body;
-                body.classList.toggle('light-theme');
-            }
-        </script>
-    </body>
-    </html>
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Script Generator</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -98,7 +91,7 @@
         }
         #generatedScript {
 			position: absolute;
-			top: 185px;
+			top: 174px;
 			right: 10px;
             background-color: transparent;
             color: inherit;
@@ -110,10 +103,8 @@
             transition: background-color 0.3s, color 0.3s;
 		}
 </style>
-    </style>
-</head>
-<body>
-    
+
+
     <form id="scriptForm">
         <label for="s1">ISP:</label>
         <select id="s1" onchange="updateS2(this)">
@@ -154,6 +145,9 @@
         <label for=""></label>
         <button class="toggle-btn" onclick="copyScriptToClipboard()">Copy Hasil Generator</button>
 
+        <label for=""></label>
+        <button class="toggle-btn" onclick="toggleTheme()">Change Theme</button>
+
         <script>
 
             document.addEventListener('keydown', function (event) {
@@ -164,13 +158,21 @@
             });
 
         </script>
-
     </form>
 	
+
     <p id="result"></p>
     <pre id="generatedScript"></pre>
 
+
     <script>
+    function toggleTheme() {
+        const body = document.body;
+        body.classList.toggle('light-theme');
+    }
+
+
+
     function updateS2(selectedOption) {
     console.log('updateS2 called');
     
@@ -183,9 +185,9 @@
 
     
     if (selectedCategory === 'BVS') {
+        addOption(S2, 'Jambi', 'Jambi');
         addOption(S2, 'Bangko', 'Bangko');
         addOption(S2, 'Sarolangun', 'Sarolangun');
-        addOption(S2, 'Jambi', 'Jambi');
         addOption(S2, 'Bulian', 'Bulian');
     } else if (selectedCategory === 'BVS_BUNGO') {
         addOption(S2, 'Bungo_RUKO', 'Bungo_RUKO');
@@ -197,8 +199,8 @@
         addOption(S2, 'Bungo_TEBO', 'Bungo_TEBO');
         addOption(S2, 'Bungo_LAMO_VLAN56', 'Bungo_LAMO_VLAN56');
     } else if (selectedCategory === '3D') {
-        addOption(S2, 'Persijam', 'Persijam');
         addOption(S2, 'Telanai', 'Telanai');
+        addOption(S2, 'Persijam', 'Persijam');
         addOption(S2, 'Paal 10', 'Paal 10');
     } else {
         addOption(S2, 'Pilih Region', 'Pilih Region');
@@ -832,7 +834,4 @@ wr`;
         document.execCommand('copy');
         document.body.removeChild(textarea);
     }
-    
     </script>
-</body>
-</html>
