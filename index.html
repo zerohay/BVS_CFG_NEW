@@ -224,8 +224,14 @@
         //SIMPEN ( }
 
 }
-
-		function displayResult() {
+    function addOption(selectElement, value, text) {
+        var option = document.createElement('option');
+        option.value = value;
+        option.text = text;
+        selectElement.add(option);
+    }
+    
+    function displayResult() { // feature disable
 			var s1 = document.getElementById('s1');
 			var S2 = document.getElementById('S2');
 			var resultElement = document.getElementById('result');
@@ -234,19 +240,12 @@
 			var selectedRegion = S2.value;
 
 			if (selectedISP === 'ISP' || selectedRegion === 'Region') {
-				resultElement.innerHTML = 'Please select options from both dropdowns.';
+				//resultElement.innerHTML = 'Please select options from both dropdowns.';
 			} else {
-				resultElement.innerHTML = 'Selected ISP: ' + selectedISP + ', Selected Region: ' + selectedRegion;
+				//resultElement.innerHTML = 'Selected ISP: ' + selectedISP + ', Selected Region: ' + selectedRegion;
 			}
 		}
 
-    function addOption(selectElement, value, text) {
-        var option = document.createElement('option');
-        option.value = value;
-        option.text = text;
-        selectElement.add(option);
-    }
-    
 
     function generateScript() {
         var nam = document.getElementById('nam').value;
@@ -824,7 +823,7 @@ wr`;
         document.getElementById('generatedScript').textContent = regionScript;
         
 	}
-    
+
     function copyScriptToClipboard() {
         var generatedScript = document.getElementById('generatedScript');
         var textarea = document.createElement('textarea');
