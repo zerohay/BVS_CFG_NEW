@@ -16,14 +16,14 @@
 
             /* Dark Theme */
             .dark-theme {
-                background-color: #000000;
+                background-color: #012727;
                 color: #ffffff;
             }
 
             /* Light Theme */
             .light-theme {
-                background-color: #ffffff;
-                color: #333333;
+                background-color: #4d0049;
+                color: #ffffff;
             }
     
             /* Content Styling */
@@ -35,9 +35,6 @@
             }
     
             .toggle-btn {
-                background-color: transparent;
-                color: inherit;
-                border: 2px solid #1eff00;
                 padding: 10px 20px;
                 font-size: 16px;
                 cursor: pointer;
@@ -46,7 +43,7 @@
             }
     
             .toggle-btn:hover {
-                background-color: #555555;
+                background-color: #424242;
                 color: #ffffff;
             }
         </style>
@@ -87,9 +84,6 @@
         }
 
         button {
-            background-color: transparent;
-            color: inherit;
-            border: 2px solid #1eff00;
             width: 45%;
             padding: 8px;
             font-size: 16px;
@@ -102,13 +96,13 @@
             justify-content: space-between;
             align-items: flex-start;
         }
-		#generatedScript {
+        #generatedScript {
 			position: absolute;
-			top: 270px;
+			top: 185px;
 			right: 10px;
             background-color: transparent;
             color: inherit;
-            border: 2px solid #1eff00;
+            border: 2px solid ;
             width: 45%;
             padding: 8px;
             cursor: pointer;
@@ -155,10 +149,10 @@
         <input type="text" id="sl" name="sl" required>
 
         <label for=""></label>
-        <button type="button" onclick="displayResult(); generateScript();">Generate Script</button>
+        <button class="toggle-btn" onclick="displayResult(); generateScript();">Generate Script</button>
         
         <label for=""></label>
-        <button type="button" onclick="copyScriptToClipboard()">Copy Hasil Generator</button>
+        <button class="toggle-btn" onclick="copyScriptToClipboard()">Copy Hasil Generator</button>
 
         <script>
 
@@ -825,7 +819,7 @@ wr`;
 
         // You can add other conditions for different regions...
 		}
-        document.getElementById('generatedScript').textContent = regionScript;  
+        document.getElementById('generatedScript').textContent = regionScript;
         
 	}
     
