@@ -454,7 +454,7 @@ exit
 wr`;
         }
             else if (selectedRegion === 'Bungo_CANDIKA') {
-				regionScript = `
+              regionScript = `
 conf t
 interface gpon-olt_${prt}
   onu ${sl} type ZTEG-F660 sn ${sn}
@@ -462,26 +462,28 @@ interface gpon-olt_${prt}
 
 interface gpon-onu_${prt}:${sl}
   description 2 $$  ${nam}-${modemScript}$$
-  tcont 1 name HSI profile pppoe
-  tcont 2 name IPTV profile 1MB
-  gemport 1 name HSI tcont 1
-  gemport 2 name IPTV tcont 2
-  service-port 1 vport 1 user-vlan 1541 vlan 1541
-  service-port 1 description 1541
-  service-port 2 vport 2 user-vlan 505 vlan 505
-  service-port 2 description 505
+  tcont 1 name internet profile pppoe
+  tcont 2 name iptv profile iptv
+  gemport 1 name internet tcont 1
+  gemport 2 name iptv tcont 2
+  service-port 1 vport 1 user-vlan 1541 vlan 1541 
+  service-port 1 description internet-pppoe
+  service-port 2 vport 2 user-vlan 1667 vlan 1667 
+  service-port 2 description iptv
 !
 
+igmp mvlan 1667 receive-port gpon-onu_${prt}:${sl} vport 2
 pon-onu-mng gpon-onu_${prt}:${sl}
   service HSI gemport 1 vlan 1541
-  service IPTV gemport 2 vlan 505
+  service IPTV gemport 2 vlan 1667
   wan-ip 1 mode pppoe username ${modemScript} password 123456 vlan-profile HSI host 1
   wan-ip 1 ping-response enable traceroute-response enable
   pppoe 1 nat enable user ${pel} password 123456
-  vlan port eth_0/4 mode hybrid def-vlan 505
+  vlan port eth_0/4 mode tag vlan 1667
   dhcp-ip ethuni eth_0/4 from-internet
-  mvlan 505
+  mvlan 1667
   security-mgmt 212 state enable mode forward protocol web
+  wan 1 ethuni 1,2,3 ssid 1,5 service internet host 1
 !
 
 igmp mvlan 505 receive-port gpon-onu_${prt}:${sl} vport 2
