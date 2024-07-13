@@ -201,6 +201,7 @@
         addOption(S2, 'Bungo_TEBO', 'BUNGO TEBO');
         addOption(S2, 'Bungo_LAMO_VLAN56', 'BUNGO LAMO VLAN56');
     } else if (selectedCategory === '3D') {
+        addOption(S2, 'Persijam1', 'PERSIJAM1');
         addOption(S2, 'Telanai', 'TELANAI');
         addOption(S2, 'Persijam', 'PERSIJAM');
         addOption(S2, 'Paal 10', 'PAL 10');
@@ -868,6 +869,25 @@ exit
 wr`;
 									
 		}
+    else if (selectedRegion === 'Persijam1') {
+			regionScript = `
+
+interface gpon-onu_${prt}:${sl}
+  gemport 1 unicast tcont 1 dir both
+  gemport 2 unicast tcont 2 dir both
+  switchport mode hybrid vport 1
+  switchport mode hybrid vport 2
+  service-port 1 vport 1 user-vlan 28 vlan 28 
+  service-port 2 vport 2 user-vlan 665 vlan 665 
+!
+pon-onu-mng gpon-onu_${prt}:${sl}
+  no service internet
+  no service iptv 
+  service internet gemport 1 vlan 28
+  service iptv gemport 2 vlan 665
+!
+
+`}
 			else if (selectedRegion === 'Telanai') {
 			regionScript = `
 con t
