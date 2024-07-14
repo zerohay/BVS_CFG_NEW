@@ -844,10 +844,12 @@ description ${nam}-${modemScript}
 tcont 1 profile internet
 tcont 2 profile iptv
 tcont 2 gap mode2
-gemport 1 tcont 1
-gemport 2 tcont 2
-service-port 1 vport 1 user-vlan 28 vlan 28
-service-port 2 vport 2 user-vlan 665 vlan 665
+gemport 1 unicast tcont 1 dir both
+gemport 2 unicast tcont 2 dir both
+switchport mode hybrid vport 1
+switchport mode hybrid vport 2
+service-port 1 vport 1 user-vlan 28 vlan 28 
+service-port 2 vport 2 user-vlan 665 vlan 665 
 !
 pon-onu-mng gpon-onu_${prt}:${sl}
 service internet gemport 1 vlan 28
@@ -857,7 +859,7 @@ wan-ip 1 ping-response enable traceroute-response enable
 pppoe 1 nat enable user ${pel} password 123456
 vlan port eth_0/4 mode tag vlan 665
 dhcp-ip ethuni eth_0/4 from-internet
-security-mng 212 state enable mode permit protocol web
+security-mng 212 state enable mode permit protocol web
 wan 1 ssid 1,5 service internet host 1
 !
 igmp mvlan 665 receive-port gpon-onu_${prt}:${sl} vport 2
