@@ -201,10 +201,10 @@
         addOption(S2, 'Bungo_TEBO', 'BUNGO TEBO');
         addOption(S2, 'Bungo_LAMO_VLAN56', 'BUNGO LAMO VLAN56');
     } else if (selectedCategory === '3D') {
-        addOption(S2, 'Persijam1', 'PERSIJAM1');
         addOption(S2, 'Telanai', 'TELANAI');
-        addOption(S2, 'Persijam', 'PERSIJAM');
         addOption(S2, 'Paal 10', 'PAL 10');
+        addOption(S2, 'Persijam', 'PERSIJAM');
+        addOption(S2, 'Persijam1', 'PERSIJAM (NOT FULL)');
     } else {
         addOption(S2, 'Pilih Region', 'Pilih Region');
     }
@@ -857,7 +857,7 @@ wan-ip 1 ping-response enable traceroute-response enable
 pppoe 1 nat enable user ${pel} password 123456
 vlan port eth_0/4 mode tag vlan 665
 dhcp-ip ethuni eth_0/4 from-internet
-security-mgmt 212 state enable mode forward protocol web
+security-mng 212 state enable mode permit protocol web
 wan 1 ssid 1,5 service internet host 1
 !
 igmp mvlan 665 receive-port gpon-onu_${prt}:${sl} vport 2
