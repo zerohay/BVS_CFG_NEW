@@ -109,6 +109,7 @@
         <label for="s1">ISP:</label>
         <select id="s1" onchange="updateS2(this)">
             <option value="ISP">PILIH ISP</option>
+            <option value="BVSJAMBI">BVS JAMBI</option>
             <option value="BVS">BVS INTERNAL</option>
             <option value="BVS_BUNGO">BVS BUNGO</option>
             <option value="3D">3D NET</option>
@@ -184,10 +185,14 @@
     var selectedCategory = s1.value;
 
     
-    if (selectedCategory === 'BVS') {
-        addOption(S2, 'Jambivlan89', 'JAMBI VLAN 89 (default)');
-        addOption(S2, 'Jambi', 'JAMBI VLAN 87 ');
-        addOption(S2, 'Jambivlan88', 'JAMBI VLAN 88');
+    if (selectedCategory === 'BVSJAMBI') {
+        addOption(S2, 'Jambivlan89/1', 'JAMBI VLAN 89 (78)');
+        addOption(S2, 'Jambivlan87/1', 'JAMBI VLAN 87 (78)');
+        addOption(S2, 'Jambivlan88/1', 'JAMBI VLAN 88 (78)');
+        addOption(S2, 'Jambivlan89/2', 'JAMBI VLAN 89 (516)');
+        addOption(S2, 'Jambivlan87/2', 'JAMBI VLAN 87 (516)');
+        addOption(S2, 'Jambivlan88/2', 'JAMBI VLAN 88 (516)');
+    } else if (selectedCategory === 'BVS') {
         addOption(S2, 'Bangko', 'BANGKO');
         addOption(S2, 'Sarolangun', 'SAROLANGUN');
         addOption(S2, 'Bulian', 'BULIAN');
@@ -346,7 +351,7 @@ exit
 write`;
 
         }
-      else if (selectedRegion === 'Jambivlan89') {
+      else if (selectedRegion === 'Jambivlan89/1') {
 				regionScript = `
 con t
 interface gpon-olt_${prt}
@@ -383,7 +388,44 @@ exit
 write`;
 								
       }
-			else if (selectedRegion === 'Jambi') {
+      else if (selectedRegion === 'Jambivlan89/2') {
+				regionScript = `
+con t
+interface gpon-olt_${prt}
+onu ${sl} type ALL-ONT sn ${sn}
+!
+interface gpon-onu_${prt}:${sl}
+description ${nam}-${modemScript}
+tcont 1 name internet profile internet
+tcont 2 name iptv profile iptv
+gemport 1 name internet unicast tcont 1 dir both
+gemport 2 name iptv unicast tcont 2 dir both
+switchport mode hybrid vport 1
+switchport mode hybrid vport 2
+service-port 1 vport 1 user-vlan 89 vlan 89
+service-port 2 vport 2 user-vlan 516 vlan 516
+!
+pon-onu-mng gpon-onu_${prt}:${sl}
+service iptv gemport 2 vlan 516
+service internet gemport 1 vlan 89
+wan-ip 1 mode pppoe username ${modemScript} password 123456 vlan-profile Net.Jambi89 host 1
+wan-ip 1 ping-response enable traceroute-response enable
+pppoe 1 nat enable user ${pel} password 123456
+vlan port eth_0/1 mode tag vlan 89
+vlan port eth_0/3 mode tag vlan 516
+vlan port eth_0/4 mode tag vlan 516
+dhcp-ip ethuni eth_0/3 from-internet
+dhcp-ip ethuni eth_0/4 from-internet
+security-mng 212 state enable mode permit protocol web
+wan 1 ethuni 1,5 ssid 1 service internet host 1
+!
+igmp mvlan 516 receive-port gpon-onu_${prt}:${sl} vport 2
+!
+exit
+write`;
+								
+      }
+			else if (selectedRegion === 'Jambivlan87/1') {
 				regionScript = `
 conf t
 interface gpon-olt_${prt}
@@ -424,7 +466,48 @@ exit
 write`;
 								
 		}
-        else if (selectedRegion === 'Jambivlan88') {
+        else if (selectedRegion === 'Jambivlan87/2') {
+				regionScript = `
+conf t
+interface gpon-olt_${prt}
+onu ${sl} type ALL-ONT sn ${sn}
+!
+interface gpon-onu_${prt}:${sl}
+description ${nam}-${modemScript}
+tcont 1 name internet profile internet
+tcont 2 name iptv profile iptv
+gemport 1 name internet unicast tcont 1 dir both
+gemport 2 name iptv unicast tcont 2 dir both
+switchport mode hybrid vport 1
+switchport mode hybrid vport 2
+service-port 1 vport 1 user-vlan 87 vlan 87
+service-port 2 vport 2 user-vlan 516 vlan 516
+!
+pon-onu-mng gpon-onu_${prt}:${sl}
+service iptv gemport 2 vlan 516
+service internet gemport 1 vlan 87
+wan-ip 1 mode pppoe username ${modemScript} password 123456 vlan-profile Net.Jambi87 host 1
+wan-ip 1 ping-response enable traceroute-response enable
+pppoe 1 nat enable user ${pel} password 123456
+vlan port eth_0/1 mode tag vlan 87
+vlan port eth_0/3 mode tag vlan 516
+vlan port eth_0/4 mode tag vlan 516
+dhcp-ip ethuni eth_0/3 from-internet
+dhcp-ip ethuni eth_0/4 from-internet
+security-mng 212 state enable mode permit protocol web
+wan 1 ssid 1,5 service internet host 1
+!
+
+igmp mvlan 516 receive-port gpon-onu_${prt}:${sl} vport 2
+!
+
+
+
+exit
+write`;
+								
+		}
+        else if (selectedRegion === 'Jambivlan88/1') {
 				regionScript = `
 conf t
 interface gpon-olt_${prt}
@@ -457,6 +540,47 @@ wan 1 ethuni 1,5 ssid 1 service internet host 1
 !
 
 igmp mvlan 78 receive-port gpon-onu_${prt}:${sl} vport 2
+!
+
+
+
+exit
+write`;
+								
+		}
+        else if (selectedRegion === 'Jambivlan88/2') {
+				regionScript = `
+conf t
+interface gpon-olt_${prt}
+onu ${sl} type ALL-ONT sn ${sn}
+!
+interface gpon-onu_${prt}:${sl}
+description ${nam}-${modemScript}
+tcont 1 name internet profile internet
+tcont 2 name iptv profile iptv
+gemport 1 name internet unicast tcont 1 dir both
+gemport 2 name iptv unicast tcont 2 dir both
+switchport mode hybrid vport 1
+switchport mode hybrid vport 2
+service-port 1 vport 1 user-vlan 88 vlan 88
+service-port 2 vport 2 user-vlan 516 vlan 516
+!
+pon-onu-mng gpon-onu_${prt}:${sl}
+service iptv gemport 2 vlan 516
+service internet gemport 1 vlan 88
+wan-ip 1 mode pppoe username ${modemScript} password 123456 vlan-profile Net.Jambi host 1
+wan-ip 1 ping-response enable traceroute-response enable
+pppoe 1 nat enable user ${pel} password 123456
+vlan port eth_0/1 mode tag vlan 88
+vlan port eth_0/3 mode tag vlan 516
+vlan port eth_0/4 mode tag vlan 516
+dhcp-ip ethuni eth_0/3 from-internet
+dhcp-ip ethuni eth_0/4 from-internet
+security-mng 212 state enable mode permit protocol web
+wan 1 ethuni 1,5 ssid 1 service internet host 1
+!
+
+igmp mvlan 516 receive-port gpon-onu_${prt}:${sl} vport 2
 !
 
 
